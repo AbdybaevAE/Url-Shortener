@@ -2,50 +2,33 @@ package server
 
 import (
 	"context"
-	"sync"
 
-	"github.com/gofrs/uuid"
-
-	pbExample "github.com/johanbrandhorst/grpc-gateway-boilerplate/proto"
+	"github.com/abdybaevae/url-shortener/internal/services/links"
+	pbLink "github.com/abdybaevae/url-shortener/proto"
+	// ""
 )
 
 // Backend implements the protobuf interface
 type Backend struct {
-	mu    *sync.RWMutex
-	users []*pbExample.User
+	linkService links.LinkService
 }
 
-// New initializes a new Backend struct.
-func New() *Backend {
+func NewBackend(linkService links.LinkService) *Backend {
 	return &Backend{
-		mu: &sync.RWMutex{},
+		linkService: linkService,
 	}
 }
-
-// AddUser adds a user to the in-memory store.
-func (b *Backend) AddUser(ctx context.Context, _ *pbExample.AddUserRequest) (*pbExample.User, error) {
-	b.mu.Lock()
-	defer b.mu.Unlock()
-
-	user := &pbExample.User{
-		Id: uuid.Must(uuid.NewV4()).String(),
+func (b *Backend) Shorten(ctx context.Context, in *pbLink.ShortenReq) (*pbLink.ShortenRes, error) {
+	shortLink, err := b.linkService.Shorten(in.Link)
+	if err != nil {
+		return nil, err
 	}
-	b.users = append(b.users, user)
-
-	return user, nil
+	return &pbLink.ShortenRes{ShortLink: shortLink}, nil
 }
-
-// ListUsers lists all users in the store.
-func (b *Backend) ListUsers(_ *pbExample.ListUsersRequest, srv pbExample.UserService_ListUsersServer) error {
-	b.mu.RLock()
-	defer b.mu.RUnlock()
-
-	for _, user := range b.users {
-		err := srv.Send(user)
-		if err != nil {
-			return err
-		}
+func (b *Backend) GetOriginalFromShorten(ctx context.Context, in *pbLink.GetOriginalFromShortenReq) (*pbLink.GetOriginalFromShortenRes, error) {
+	originalLink, err := b.linkService.GetOriginalFromShorten(in.ShortLink)
+	if err != nil {
+		return nil, err
 	}
-
-	return nil
+	return &pbLink.GetOriginalFromShortenRes{OriginalLink: originalLink}, nil
 }

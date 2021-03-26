@@ -16,9 +16,9 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/grpclog"
 
-	"github.com/johanbrandhorst/grpc-gateway-boilerplate/insecure"
-	pbExample "github.com/johanbrandhorst/grpc-gateway-boilerplate/proto"
-	"github.com/johanbrandhorst/grpc-gateway-boilerplate/third_party"
+	"github.com/abdybaevae/url-shortener/insecure"
+	pbLink "github.com/abdybaevae/url-shortener/proto"
+	"github.com/abdybaevae/url-shortener/third_party"
 )
 
 // getOpenAPIHandler serves an OpenAPI UI.
@@ -52,7 +52,7 @@ func Run(dialAddr string) error {
 	}
 
 	gwmux := runtime.NewServeMux()
-	err = pbExample.RegisterUserServiceHandler(context.Background(), gwmux, conn)
+	err = pbLink.RegisterLinkServiceHandler(context.Background(), gwmux, conn)
 	if err != nil {
 		return fmt.Errorf("failed to register gateway: %w", err)
 	}

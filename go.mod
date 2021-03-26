@@ -1,12 +1,12 @@
-module github.com/johanbrandhorst/grpc-gateway-boilerplate
+module github.com/abdybaevae/url-shortener
 
 go 1.16
 
 require (
 	github.com/gofrs/uuid v4.0.0+incompatible
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.2.0
-	google.golang.org/genproto v0.0.0-20210207032614-bba0dbe2a9ea
-	google.golang.org/grpc v1.35.0
-	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.0.1
-	google.golang.org/protobuf v1.25.1-0.20201208041424-160c7477e0e8
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.3.0
+	google.golang.org/genproto v0.0.0-20210325224202-eed09b1b5210
+	google.golang.org/grpc v1.36.1
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0
+	google.golang.org/protobuf v1.26.0
 )

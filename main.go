@@ -9,13 +9,22 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/grpclog"
 
-	"github.com/johanbrandhorst/grpc-gateway-boilerplate/gateway"
-	"github.com/johanbrandhorst/grpc-gateway-boilerplate/insecure"
-	pbExample "github.com/johanbrandhorst/grpc-gateway-boilerplate/proto"
-	"github.com/johanbrandhorst/grpc-gateway-boilerplate/server"
+	"github.com/abdybaevae/url-shortener/gateway"
+	"github.com/abdybaevae/url-shortener/insecure"
+	"github.com/abdybaevae/url-shortener/internal/services/keys"
+	"github.com/abdybaevae/url-shortener/internal/services/links"
+	pbExample "github.com/abdybaevae/url-shortener/proto"
+	"github.com/abdybaevae/url-shortener/server"
 )
 
 func main() {
+	// init services
+	keyService := keys.NewKeyService()
+	linkService := links.NewLinkService(keyService)
+
+	//
+	backend := server.NewBackend(linkService)
+
 	// Adds gRPC internal logs. This is quite verbose, so adjust as desired!
 	log := grpclog.NewLoggerV2(os.Stdout, ioutil.Discard, ioutil.Discard)
 	grpclog.SetLoggerV2(log)
@@ -30,7 +39,7 @@ func main() {
 		// TODO: Replace with your own certificate!
 		grpc.Creds(credentials.NewServerTLSFromCert(&insecure.Cert)),
 	)
-	pbExample.RegisterUserServiceServer(s, server.New())
+	pbExample.RegisterLinkServiceServer(s, backend)
 
 	// Serve gRPC Server
 	log.Info("Serving gRPC on https://", addr)

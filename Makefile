@@ -3,7 +3,7 @@ generate:
 
 lint:
 	buf lint
-	buf breaking --against 'https://github.com/johanbrandhorst/grpc-gateway-boilerplate.git#branch=master'
+	buf breaking --against 'https://github.com/abdybaevae/url-shortener.git#branch=master'
 
 BUF_VERSION:=0.40.0
 

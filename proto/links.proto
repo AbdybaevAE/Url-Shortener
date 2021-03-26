@@ -7,7 +7,7 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 
 // Defines the import path that should be used to import the generated package,
 // and the package name.
-option go_package = "github.com/johanbrandhorst/grpc-gateway-boilerplate/proto;example";
+option go_package = "github.com/abdybaevae/url-shortener/proto;links";
 
 // These annotations are used when generating the OpenAPI file.
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
@@ -15,42 +15,49 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     version: "1.0";
   };
   external_docs: {
-    url: "https://github.com/johanbrandhorst/grpc-gateway-boilerplate";
-    description: "gRPC-gateway boilerplate repository";
+    url: "https://github.com/abdybaevae/url-shortener";
+    description: "Url shorten service";
   }
   schemes: HTTPS;
 };
 
-service UserService {
-  rpc AddUser(AddUserRequest) returns (User) {
+service LinkService {
+  rpc Shorten(ShortenReq) returns (ShortenRes) {
     option (google.api.http) = {
       // Route to this method from POST requests to /api/v1/users
-      post: "/api/v1/users"
+      post: "/api/v1/links"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "Add a user"
-      description: "Add a user to the server."
-      tags: "Users"
+      summary: "Shorten link"
+      description: "Shorten given link."
+      tags: "Links"
     };
   }
-  rpc ListUsers(ListUsersRequest) returns (stream User) {
+  rpc GetOriginalFromShorten(GetOriginalFromShortenReq) returns (GetOriginalFromShortenRes) {
     option (google.api.http) = {
       // Route to this method from GET requests to /api/v1/users
-      get: "/api/v1/users"
+      get: "/api/v1/links/{shortLink}"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "List users"
-      description: "List all users on the server."
-      tags: "Users"
+      summary: "Get original link"
+      description: "Get original link by short link."
+      tags: "Links"
     };
   }
 }
 
-message AddUserRequest {}
+message ShortenReq {
+  string link = 1;
+}
 
-message ListUsersRequest {}
+message ShortenRes {
+  string shortLink = 1;
+}
+message GetOriginalFromShortenReq {
+  string shortLink = 1;
+}
 
-message User {
-  string id = 1;
+message GetOriginalFromShortenRes {
+  string originalLink = 1;
 }
