@@ -5,16 +5,16 @@ import (
 
 	"github.com/abdybaevae/url-shortener/pkg/errors"
 	"github.com/abdybaevae/url-shortener/pkg/models"
-	linkRepo "github.com/abdybaevae/url-shortener/pkg/repos/links"
-	"github.com/abdybaevae/url-shortener/pkg/services/keys"
+	link_repo "github.com/abdybaevae/url-shortener/pkg/repos/link"
+	key_service "github.com/abdybaevae/url-shortener/pkg/services/key"
 )
 
 type LinkServiceImpl struct {
-	keyService keys.KeyService
-	linkRepo   linkRepo.LinkRepo
+	keyService key_service.KeyService
+	linkRepo   link_repo.LinkRepo
 }
 
-func NewLinkService(keyService keys.KeyService, linkRepo linkRepo.LinkRepo) LinkService {
+func New(linkRepo link_repo.LinkRepo, keyService key_service.KeyService) LinkService {
 	return &LinkServiceImpl{keyService: keyService}
 }
 func (s *LinkServiceImpl) Shorten(longLink string) (string, error) {

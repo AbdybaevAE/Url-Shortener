@@ -1,4 +1,4 @@
-package links
+package link
 
 import "github.com/abdybaevae/url-shortener/pkg/models"
 

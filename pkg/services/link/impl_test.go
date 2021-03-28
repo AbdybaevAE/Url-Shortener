@@ -3,7 +3,7 @@ package links
 import (
 	"testing"
 
-	mock_keys "github.com/abdybaevae/url-shortener/mocks/pkg/services/keys"
+	mock_keys "github.com/abdybaevae/url-shortener/mocks/pkg/services/key"
 	"github.com/abdybaevae/url-shortener/pkg/errors"
 	gomock "github.com/golang/mock/gomock"
 )
@@ -52,7 +52,7 @@ func TestShorten(t *testing.T) {
 			if tc.prepare != nil {
 				tc.prepare(&d)
 			}
-			linkService := NewLinkService(d.keyService)
+			linkService := New(nil, d.keyService)
 			got, gotErr := linkService.Shorten(tc.args)
 			if tc.wantErr != nil {
 				if tc.wantErr != gotErr {

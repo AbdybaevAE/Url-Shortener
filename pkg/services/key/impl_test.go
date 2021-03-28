@@ -12,7 +12,7 @@ func TestGet(t *testing.T) {
 	}
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-			keyService := NewService()
+			keyService := New(nil, nil)
 			got, gotErr := keyService.Get()
 			if tc.wantErr != nil {
 				if tc.wantErr != gotErr {
