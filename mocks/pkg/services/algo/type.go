@@ -7,6 +7,7 @@ package mock_algo
 import (
 	reflect "reflect"
 
+	algo "github.com/abdybaevae/url-shortener/pkg/services/algo"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -48,16 +49,68 @@ func (mr *MockAlgoServiceMockRecorder) EnsureAll() *gomock.Call {
 }
 
 // GenerateKeys mocks base method.
-func (m *MockAlgoService) GenerateKeys(name string) ([]string, error) {
+func (m *MockAlgoService) GenerateKeys() ([]string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GenerateKeys", name)
+	ret := m.ctrl.Call(m, "GenerateKeys")
 	ret0, _ := ret[0].([]string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GenerateKeys indicates an expected call of GenerateKeys.
-func (mr *MockAlgoServiceMockRecorder) GenerateKeys(name interface{}) *gomock.Call {
+func (mr *MockAlgoServiceMockRecorder) GenerateKeys() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateKeys", reflect.TypeOf((*MockAlgoService)(nil).GenerateKeys), name)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateKeys", reflect.TypeOf((*MockAlgoService)(nil).GenerateKeys))
+}
+
+// GetId mocks base method.
+func (m *MockAlgoService) GetId() int {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetId")
+	ret0, _ := ret[0].(int)
+	return ret0
+}
+
+// GetId indicates an expected call of GetId.
+func (mr *MockAlgoServiceMockRecorder) GetId() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetId", reflect.TypeOf((*MockAlgoService)(nil).GetId))
+}
+
+// MockAlgoFactory is a mock of AlgoFactory interface.
+type MockAlgoFactory struct {
+	ctrl     *gomock.Controller
+	recorder *MockAlgoFactoryMockRecorder
+}
+
+// MockAlgoFactoryMockRecorder is the mock recorder for MockAlgoFactory.
+type MockAlgoFactoryMockRecorder struct {
+	mock *MockAlgoFactory
+}
+
+// NewMockAlgoFactory creates a new mock instance.
+func NewMockAlgoFactory(ctrl *gomock.Controller) *MockAlgoFactory {
+	mock := &MockAlgoFactory{ctrl: ctrl}
+	mock.recorder = &MockAlgoFactoryMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockAlgoFactory) EXPECT() *MockAlgoFactoryMockRecorder {
+	return m.recorder
+}
+
+// Get mocks base method.
+func (m *MockAlgoFactory) Get(algoName string) (algo.AlgoService, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Get", algoName)
+	ret0, _ := ret[0].(algo.AlgoService)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Get indicates an expected call of Get.
+func (mr *MockAlgoFactoryMockRecorder) Get(algoName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockAlgoFactory)(nil).Get), algoName)
 }

@@ -3,8 +3,9 @@ package links
 import (
 	"testing"
 
-	mock_keys "github.com/abdybaevae/url-shortener/mocks/pkg/services/key"
-	"github.com/abdybaevae/url-shortener/pkg/errors"
+	mock_link_repo "github.com/abdybaevae/url-shortener/mocks/pkg/repos/link"
+	mock_key_service "github.com/abdybaevae/url-shortener/mocks/pkg/services/key"
+	http_errors "github.com/abdybaevae/url-shortener/pkg/errors/http"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -13,7 +14,8 @@ const DefaultKey = "some-key"
 
 func TestShorten(t *testing.T) {
 	type deps struct {
-		keyService *mock_keys.MockKeyService
+		keyService *mock_key_service.MockKeyService
+		linkRepo   *mock_link_repo.MockLinkRepo
 	}
 	tt := []struct {
 		name    string
@@ -29,16 +31,17 @@ func TestShorten(t *testing.T) {
 			prepare: func(d *deps) {
 				t.Log("prepare called")
 				d.keyService.EXPECT().Get().Return(DefaultKey, nil)
+				d.linkRepo.EXPECT().Save(gomock.Any()).Return(nil)
 			},
 		},
 		{
 			name:    "should fail on empty link",
-			wantErr: errors.InvalidLink,
+			wantErr: http_errors.InvalidLink,
 			args:    "",
 		},
 		{
 			name:    "should fail on invalid link",
-			wantErr: errors.InvalidLink,
+			wantErr: http_errors.InvalidLink,
 			args:    "brokenlink",
 		},
 	}
@@ -47,13 +50,15 @@ func TestShorten(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 			d := deps{
-				keyService: mock_keys.NewMockKeyService(ctrl),
+				keyService: mock_key_service.NewMockKeyService(ctrl),
+				linkRepo:   mock_link_repo.NewMockLinkRepo(ctrl),
 			}
 			if tc.prepare != nil {
 				tc.prepare(&d)
 			}
-			linkService := New(nil, d.keyService)
+			linkService := New(d.linkRepo, d.keyService)
 			got, gotErr := linkService.Shorten(tc.args)
+
 			if tc.wantErr != nil {
 				if tc.wantErr != gotErr {
 					t.Errorf("want %v got %v", tc.wantErr, gotErr)

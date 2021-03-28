@@ -1,6 +1,9 @@
 package algo
 
 type AlgoService interface {
-	GenerateKeys(name string) (keys []string, err error)
-	EnsureAll() (err error)
+	GenerateKeys() (values []string, err error)
+	GetId() (algoId int)
+}
+type AlgoFactory interface {
+	Get(algoName string) (AlgoService, error)
 }

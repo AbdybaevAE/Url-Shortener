@@ -1,11 +1,18 @@
 package link
 
-import "github.com/abdybaevae/url-shortener/pkg/models"
+import (
+	"github.com/abdybaevae/url-shortener/pkg/models"
+	"github.com/jmoiron/sqlx"
+)
 
-type repo struct{}
+type repo struct {
+	db *sqlx.DB
+}
 
-func New() LinkRepo {
-	return &repo{}
+func New(db *sqlx.DB) LinkRepo {
+	return &repo{
+		db: db,
+	}
 }
 func (r *repo) Save(link *models.Link) error {
 	return nil

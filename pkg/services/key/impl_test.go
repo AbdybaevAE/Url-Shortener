@@ -1,8 +1,18 @@
 package keys
 
-import "testing"
+import (
+	"testing"
+
+	mock_key_repo "github.com/abdybaevae/url-shortener/mocks/pkg/repos/key"
+	mock_algo_srv "github.com/abdybaevae/url-shortener/mocks/pkg/services/algo"
+	"github.com/golang/mock/gomock"
+)
 
 func TestGet(t *testing.T) {
+	type deps struct {
+		algoSrv *mock_algo_srv.MockAlgoService
+		keyRepo *mock_key_repo.MockKeyRepo
+	}
 	tt := []struct {
 		name    string
 		want    string
@@ -12,7 +22,13 @@ func TestGet(t *testing.T) {
 	}
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-			keyService := New(nil, nil)
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+			d := &deps{
+				algoSrv: mock_algo_srv.NewMockAlgoService(ctrl),
+				keyRepo: mock_key_repo.NewMockKeyRepo(ctrl),
+			}
+			keyService := New(d.keyRepo, d.algoSrv)
 			got, gotErr := keyService.Get()
 			if tc.wantErr != nil {
 				if tc.wantErr != gotErr {

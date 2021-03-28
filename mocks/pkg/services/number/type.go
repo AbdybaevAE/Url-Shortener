@@ -7,7 +7,6 @@ package mock_number
 import (
 	reflect "reflect"
 
-	models "github.com/abdybaevae/url-shortener/pkg/models"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -34,32 +33,17 @@ func (m *MockNumberService) EXPECT() *MockNumberServiceMockRecorder {
 	return m.recorder
 }
 
-// Create mocks base method.
-func (m *MockNumberService) Create(number *models.Number) (int, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", number)
-	ret0, _ := ret[0].(int)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Create indicates an expected call of Create.
-func (mr *MockNumberServiceMockRecorder) Create(number interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockNumberService)(nil).Create), number)
-}
-
 // Increment mocks base method.
-func (m *MockNumberService) Increment(id, byValue int) (int, error) {
+func (m *MockNumberService) Increment(number_id, byValue int) (int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Increment", id, byValue)
+	ret := m.ctrl.Call(m, "Increment", number_id, byValue)
 	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Increment indicates an expected call of Increment.
-func (mr *MockNumberServiceMockRecorder) Increment(id, byValue interface{}) *gomock.Call {
+func (mr *MockNumberServiceMockRecorder) Increment(number_id, byValue interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Increment", reflect.TypeOf((*MockNumberService)(nil).Increment), id, byValue)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Increment", reflect.TypeOf((*MockNumberService)(nil).Increment), number_id, byValue)
 }

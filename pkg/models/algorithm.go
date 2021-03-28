@@ -1,6 +1,6 @@
 package models
 
-type Algorithm struct {
+type Algo struct {
 	Id       int    `database:"id"`
 	Name     int    `database:"name"`
 	NumberId int    `database:"number_id"`

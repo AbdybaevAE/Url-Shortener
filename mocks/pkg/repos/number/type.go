@@ -3,3 +3,47 @@
 
 // Package mock_number is a generated GoMock package.
 package mock_number
+
+import (
+	reflect "reflect"
+
+	gomock "github.com/golang/mock/gomock"
+)
+
+// MockNumberRepo is a mock of NumberRepo interface.
+type MockNumberRepo struct {
+	ctrl     *gomock.Controller
+	recorder *MockNumberRepoMockRecorder
+}
+
+// MockNumberRepoMockRecorder is the mock recorder for MockNumberRepo.
+type MockNumberRepoMockRecorder struct {
+	mock *MockNumberRepo
+}
+
+// NewMockNumberRepo creates a new mock instance.
+func NewMockNumberRepo(ctrl *gomock.Controller) *MockNumberRepo {
+	mock := &MockNumberRepo{ctrl: ctrl}
+	mock.recorder = &MockNumberRepoMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockNumberRepo) EXPECT() *MockNumberRepoMockRecorder {
+	return m.recorder
+}
+
+// Increment mocks base method.
+func (m *MockNumberRepo) Increment(numberId, value int) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Increment", numberId, value)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Increment indicates an expected call of Increment.
+func (mr *MockNumberRepoMockRecorder) Increment(numberId, value interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Increment", reflect.TypeOf((*MockNumberRepo)(nil).Increment), numberId, value)
+}

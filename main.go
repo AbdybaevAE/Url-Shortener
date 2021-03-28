@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"io/ioutil"
 	"net"
 	"os"
@@ -20,6 +21,9 @@ import (
 	key_repo "github.com/abdybaevae/url-shortener/pkg/repos/key"
 	key_service "github.com/abdybaevae/url-shortener/pkg/services/key"
 
+	num_repo "github.com/abdybaevae/url-shortener/pkg/repos/number"
+	num_srv "github.com/abdybaevae/url-shortener/pkg/services/number"
+
 	link_repo "github.com/abdybaevae/url-shortener/pkg/repos/link"
 	link_service "github.com/abdybaevae/url-shortener/pkg/services/link"
 
@@ -28,6 +32,9 @@ import (
 )
 
 func main() {
+
+	algorithm := flag.String("algorithm", string(algo_service.BASE_62), "Default algorithm name that will be used to pre generate keys")
+	flag.Parse()
 	log := grpclog.NewLoggerV2(os.Stdout, ioutil.Discard, ioutil.Discard)
 	grpclog.SetLoggerV2(log)
 
@@ -35,23 +42,24 @@ func main() {
 	if err != nil {
 		log.Fatalln("cannot connect to database ", db)
 	}
-
-	// init services
-	algoRepo := algo_repo.New()
-	algoService := algo_service.New(algoRepo)
-
-	keyRepo := key_repo.New()
-	keyService := key_service.New(keyRepo, algoService)
-
-	linkRepo := link_repo.New()
-	linkService := link_service.New(linkRepo, keyService)
-
-	if err := migrations.Run(algoService); err != nil {
+	if err := migrations.Run(db); err != nil {
 		log.Fatal("cannot migrate", err)
 	}
 
+	// init services
+	numRepo := num_repo.New(db)
+	algoRepo := algo_repo.New(db)
+	keyRepo := key_repo.New(db)
+	linkRepo := link_repo.New(db)
+
+	numSrv := num_srv.New(numRepo)
+	algoFactory := algo_service.NewFactory(algoRepo, numSrv)
+	algoSrv, err := algoFactory.Get(*algorithm)
+	keySrv := key_service.New(keyRepo, algoSrv)
+	linkSrv := link_service.New(linkRepo, keySrv)
+
 	//
-	backend := server.NewBackend(linkService)
+	backend := server.NewBackend(linkSrv)
 
 	// Adds gRPC internal logs. This is quite verbose, so adjust as desired!
 

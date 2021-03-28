@@ -1,18 +1,18 @@
 package migrations
 
 import (
-	algos_service "github.com/abdybaevae/url-shortener/pkg/services/algo"
+	"github.com/jmoiron/sqlx"
 )
 
 type migrations struct {
-	algoService algos_service.AlgoService
+	db *sqlx.DB
 }
 type migrationFunc = func(m *migrations) error
 
-func Run(algoService algos_service.AlgoService) error {
-	m := &migrations{algoService: algoService}
+func Run(db *sqlx.DB) error {
+	m := &migrations{db: db}
 	all := []migrationFunc{
-		ensureAllAlgorithms,
+		ensureDefaultAlgorithm,
 	}
 	for _, f := range all {
 		if err := f(m); err != nil {
@@ -23,7 +23,6 @@ func Run(algoService algos_service.AlgoService) error {
 
 }
 
-func ensureAllAlgorithms(m *migrations) error {
-	m.algoService.EnsureAll()
+func ensureDefaultAlgorithm(m *migrations) error {
 	return nil
 }

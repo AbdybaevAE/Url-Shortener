@@ -5,6 +5,9 @@
 package mock_key
 
 import (
+	reflect "reflect"
+
+	models "github.com/abdybaevae/url-shortener/pkg/models"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -29,4 +32,33 @@ func NewMockKeyRepo(ctrl *gomock.Controller) *MockKeyRepo {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockKeyRepo) EXPECT() *MockKeyRepoMockRecorder {
 	return m.recorder
+}
+
+// DeleteOne mocks base method.
+func (m *MockKeyRepo) DeleteOne(algoId int) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteOne", algoId)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteOne indicates an expected call of DeleteOne.
+func (mr *MockKeyRepoMockRecorder) DeleteOne(algoId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOne", reflect.TypeOf((*MockKeyRepo)(nil).DeleteOne), algoId)
+}
+
+// InsertMany mocks base method.
+func (m *MockKeyRepo) InsertMany(keys []models.Key) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "InsertMany", keys)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// InsertMany indicates an expected call of InsertMany.
+func (mr *MockKeyRepoMockRecorder) InsertMany(keys interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertMany", reflect.TypeOf((*MockKeyRepo)(nil).InsertMany), keys)
 }
