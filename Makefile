@@ -17,3 +17,13 @@ install:
     	"https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}/buf-$(shell uname -s)-$(shell uname -m)" \
     	-o "$(shell go env GOPATH)/bin/buf" && \
   	chmod +x "$(shell go env GOPATH)/bin/buf"
+
+hot-tests:
+	reflex -c reflex.conf
+
+MOCKS_DESTINATION=mocks
+.PHONY: mocks
+mocks: pkg/services/links/type.go pkg/services/keys/type.go
+	@echo "Generating mocks..."
+	@rm -rf $(MOCKS_DESTINATION)
+	@for file in $^; do mockgen -source=$$file -destination=$(MOCKS_DESTINATION)/$$file; done

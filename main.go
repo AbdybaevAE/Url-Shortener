@@ -11,16 +11,17 @@ import (
 
 	"github.com/abdybaevae/url-shortener/gateway"
 	"github.com/abdybaevae/url-shortener/insecure"
-	"github.com/abdybaevae/url-shortener/internal/services/keys"
-	"github.com/abdybaevae/url-shortener/internal/services/links"
+	keys_service "github.com/abdybaevae/url-shortener/pkg/services/keys"
+	links_service "github.com/abdybaevae/url-shortener/pkg/services/links"
+
 	pbExample "github.com/abdybaevae/url-shortener/proto"
 	"github.com/abdybaevae/url-shortener/server"
 )
 
 func main() {
 	// init services
-	keyService := keys.NewKeyService()
-	linkService := links.NewLinkService(keyService)
+	keyService := keys_service.NewService()
+	linkService := links_service.NewLinkService(keyService)
 
 	//
 	backend := server.NewBackend(linkService)

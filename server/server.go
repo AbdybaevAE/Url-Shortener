@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 
-	"github.com/abdybaevae/url-shortener/internal/services/links"
+	"github.com/abdybaevae/url-shortener/pkg/services/links"
 	pbLink "github.com/abdybaevae/url-shortener/proto"
 	// ""
 )
