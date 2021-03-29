@@ -14,7 +14,7 @@ func New(db *sqlx.DB) AlgoRepo {
 	return &repo{db: db}
 }
 
-var getAlgoByQuery = "select * from algorithms where algo_name = $1"
+var getAlgoByQuery = "select * from algorithms where algo_strategy = $1"
 
 func (r *repo) Get(algoName string) (*models.Algo, error) {
 	var algo models.Algo
@@ -23,7 +23,3 @@ func (r *repo) Get(algoName string) (*models.Algo, error) {
 	}
 	return &algo, nil
 }
-
-// func (r *repo) someMEthod() {
-
-// }
