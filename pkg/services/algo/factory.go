@@ -23,13 +23,13 @@ func NewFactory(algoRepo repo.AlgoRepo, numService num_srv.NumberService) AlgoFa
 		mu:         &sync.Mutex{},
 	}
 }
-func (f *factory) Get(algoName string) (AlgoService, error) {
+func (f *factory) Get(strategy string) (AlgoService, error) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
-	if val, ok := f.store[algoName]; ok {
+	if val, ok := f.store[strategy]; ok {
 		return val, nil
 	}
-	entity, err := f.repo.Get(algoName)
+	entity, err := f.repo.Get(strategy)
 	if err != nil {
 		return nil, err
 	}
@@ -37,6 +37,6 @@ func (f *factory) Get(algoName string) (AlgoService, error) {
 	if err != nil {
 		return nil, http_errors.ServerInternal
 	}
-	f.store[algoName] = algoService
+	f.store[strategy] = algoService
 	return algoService, nil
 }

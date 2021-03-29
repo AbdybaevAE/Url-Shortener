@@ -7,5 +7,5 @@ type AlgoService interface {
 	Entity() (algo *models.Algo)
 }
 type AlgoFactory interface {
-	Get(algoName string) (AlgoService, error)
+	Get(strategy string) (AlgoService, error)
 }
