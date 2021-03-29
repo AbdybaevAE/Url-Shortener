@@ -28,7 +28,8 @@ func New(keyRepo key_repo.KeyRepo, algoSrv algo.AlgoService) KeyService {
 func (s *service) Get() (string, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	key, err := s.takeKey()
+	algoId := s.algoSrv.Entity().Id
+	key, err := s.keyRepo.DeleteOne(algoId)
 	if err == nil {
 		return key, nil
 	}
@@ -43,14 +44,11 @@ func (s *service) Get() (string, error) {
 	for _, v := range values {
 		keys = append(keys, models.Key{
 			Value:  v,
-			AlgoId: s.algoSrv.GetId(),
+			AlgoId: s.algoSrv.Entity().Id,
 		})
 	}
 	if err := s.keyRepo.InsertMany(keys); err != nil {
 		return "", err
 	}
 	return s.Get()
-}
-func (s *service) takeKey() (string, error) {
-	return s.keyRepo.DeleteOne(s.algoSrv.GetId())
 }

@@ -7,6 +7,7 @@ package mock_algo
 import (
 	reflect "reflect"
 
+	models "github.com/abdybaevae/url-shortener/pkg/models"
 	algo "github.com/abdybaevae/url-shortener/pkg/services/algo"
 	gomock "github.com/golang/mock/gomock"
 )
@@ -34,18 +35,18 @@ func (m *MockAlgoService) EXPECT() *MockAlgoServiceMockRecorder {
 	return m.recorder
 }
 
-// EnsureAll mocks base method.
-func (m *MockAlgoService) EnsureAll() error {
+// Entity mocks base method.
+func (m *MockAlgoService) Entity() *models.Algo {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnsureAll")
-	ret0, _ := ret[0].(error)
+	ret := m.ctrl.Call(m, "Entity")
+	ret0, _ := ret[0].(*models.Algo)
 	return ret0
 }
 
-// EnsureAll indicates an expected call of EnsureAll.
-func (mr *MockAlgoServiceMockRecorder) EnsureAll() *gomock.Call {
+// Entity indicates an expected call of Entity.
+func (mr *MockAlgoServiceMockRecorder) Entity() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnsureAll", reflect.TypeOf((*MockAlgoService)(nil).EnsureAll))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Entity", reflect.TypeOf((*MockAlgoService)(nil).Entity))
 }
 
 // GenerateKeys mocks base method.
@@ -61,20 +62,6 @@ func (m *MockAlgoService) GenerateKeys() ([]string, error) {
 func (mr *MockAlgoServiceMockRecorder) GenerateKeys() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateKeys", reflect.TypeOf((*MockAlgoService)(nil).GenerateKeys))
-}
-
-// GetId mocks base method.
-func (m *MockAlgoService) GetId() int {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetId")
-	ret0, _ := ret[0].(int)
-	return ret0
-}
-
-// GetId indicates an expected call of GetId.
-func (mr *MockAlgoServiceMockRecorder) GetId() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetId", reflect.TypeOf((*MockAlgoService)(nil).GetId))
 }
 
 // MockAlgoFactory is a mock of AlgoFactory interface.

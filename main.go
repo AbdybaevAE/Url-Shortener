@@ -33,7 +33,7 @@ import (
 
 func main() {
 
-	algorithm := flag.String("algorithm", string(algo_service.BASE_62), "Default algorithm name that will be used to pre generate keys")
+	algorithm := flag.String("algorithm", string(algo_service.BASE_62), "Default algorithm strategy that will be used to pre generate keys")
 	flag.Parse()
 	log := grpclog.NewLoggerV2(os.Stdout, ioutil.Discard, ioutil.Discard)
 	grpclog.SetLoggerV2(log)

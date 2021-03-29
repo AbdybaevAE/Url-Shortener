@@ -1,7 +1,6 @@
 package algo
 
 import (
-	"encoding/json"
 	"strings"
 
 	typ_err "github.com/abdybaevae/url-shortener/pkg/errors/typed"
@@ -21,42 +20,33 @@ func strategyFromString(val string) (Strategy, error) {
 	case string(BASE_62):
 		return BASE_62, nil
 	}
-	return "", typ_err.InvalidStrategy
-}
-
-type metadata struct {
-	inc      int
-	strategy string
-	dict     string
+	return "", typ_err.AlgoNotFound
 }
 
 type service struct {
-	strategy   Strategy
-	entity     *models.Algo
-	algoRepo   repo.AlgoRepo
-	numService num_srv.NumberService
-	meta       *metadata
+	strategy Strategy
+	entity   *models.Algo
+	algoRepo repo.AlgoRepo
+	numSrv   num_srv.NumberService
 }
 
 func newService(
-	algoRepo repo.AlgoRepo, numService num_srv.NumberService, entity *models.Algo) (AlgoService, error) {
-	var meta metadata
-	if err := json.Unmarshal([]byte(entity.Metadata), &meta); err != nil {
-		return nil, err
-	}
-	strategy, err := strategyFromString(meta.strategy)
+	algoRepo repo.AlgoRepo, numSrv num_srv.NumberService, entity *models.Algo) (AlgoService, error) {
+	strategy, err := strategyFromString(entity.Strategy)
 	if err != nil {
 		return nil, err
 	}
-	return &service{meta: &meta, strategy: strategy, algoRepo: algoRepo, entity: entity, numService: numService}, nil
+	return &service{strategy: strategy, algoRepo: algoRepo, entity: entity, numSrv: numSrv}, nil
 }
-
+func (s *service) Entity() *models.Algo {
+	return s.entity
+}
 func (s *service) GenerateKeys() ([]string, error) {
 	ret := make([]string, 0)
 	switch s.strategy {
 	case BASE_62:
-		numId, inc, dict := s.entity.NumberId, s.meta.inc, s.meta.dict
-		lastNum, err := s.numService.Increment(numId, inc)
+		numId, inc, dict := s.entity.NumberId, s.entity.IncrementValue, s.entity.Dict
+		lastNum, err := s.numSrv.Increment(numId, inc)
 		if err != nil {
 			return nil, err
 		}
@@ -64,11 +54,8 @@ func (s *service) GenerateKeys() ([]string, error) {
 		return getKeysByBaseStrategy(firstNum, lastNum, dict), nil
 	// case [NEW_STRATEGY]
 	default:
-		return ret, typ_err.InvalidStrategy
+		return ret, typ_err.AlgoNotFound
 	}
-}
-func (s *service) GetId() int {
-	return s.entity.Id
 }
 func isValidDictForBaseStrategy(dict string) bool {
 	mp := make(map[rune]bool)
