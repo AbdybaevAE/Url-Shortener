@@ -88,16 +88,16 @@ func (m *MockAlgoFactory) EXPECT() *MockAlgoFactoryMockRecorder {
 }
 
 // Get mocks base method.
-func (m *MockAlgoFactory) Get(algoName string) (algo.AlgoService, error) {
+func (m *MockAlgoFactory) Get(strategy string) (algo.AlgoService, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Get", algoName)
+	ret := m.ctrl.Call(m, "Get", strategy)
 	ret0, _ := ret[0].(algo.AlgoService)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Get indicates an expected call of Get.
-func (mr *MockAlgoFactoryMockRecorder) Get(algoName interface{}) *gomock.Call {
+func (mr *MockAlgoFactoryMockRecorder) Get(strategy interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockAlgoFactory)(nil).Get), algoName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockAlgoFactory)(nil).Get), strategy)
 }

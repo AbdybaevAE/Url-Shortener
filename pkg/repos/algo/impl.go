@@ -18,7 +18,7 @@ var getAlgoByQuery = "select * from algorithms where algo_strategy = $1"
 
 func (r *repo) Get(algoName string) (*models.Algo, error) {
 	var algo models.Algo
-	if err := r.db.Get(&algo, getAlgoByQuery, getAlgoByQuery, algoName); err != nil {
+	if err := r.db.Get(&algo, getAlgoByQuery, algoName); err != nil {
 		return nil, typed_errors.AlgoNotFound
 	}
 	return &algo, nil

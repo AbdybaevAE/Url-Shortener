@@ -5,7 +5,6 @@ import (
 
 	link_service "github.com/abdybaevae/url-shortener/pkg/services/link"
 	pbLink "github.com/abdybaevae/url-shortener/proto"
-	// ""
 )
 
 // Backend implements the protobuf interface
@@ -13,7 +12,7 @@ type Backend struct {
 	linkService link_service.LinkService
 }
 
-func NewBackend(linkService link_service.LinkService) *Backend {
+func NewBackend(linkService link_service.LinkService) pbLink.LinkServiceServer {
 	return &Backend{
 		linkService: linkService,
 	}

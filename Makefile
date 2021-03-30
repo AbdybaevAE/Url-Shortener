@@ -23,7 +23,7 @@ hot-tests:
 
 MOCKS_DESTINATION=mocks
 .PHONY: mocks
-mocks: pkg/services/algo/type.go pkg/repos/algo/type.go pkg/services/key/type.go pkg/repos/key/type.go pkg/services/link/type.go pkg/repos/link/type.go pkg/services/number/type.go pkg/repos/number/type.go
+mocks: proto/links_grpc.pb.go pkg/services/algo/type.go pkg/repos/algo/type.go pkg/services/key/type.go pkg/repos/key/type.go pkg/services/link/type.go pkg/repos/link/type.go pkg/services/number/type.go pkg/repos/number/type.go
 	@echo "Generating mocks..."
 	@rm -rf $(MOCKS_DESTINATION)
 	@for file in $^; do mockgen -source=$$file -destination=$(MOCKS_DESTINATION)/$$file; done
