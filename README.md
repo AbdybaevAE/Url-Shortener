@@ -24,3 +24,9 @@
 
 
 
+### Notes:
+In base62 implementation every long url refference on unique integer, that converts to base62 (digits and alphabetical symbols). Key grows up to 62^n( 56 800 235 584 unique keys for 6 chars size)
+
+
+
+
