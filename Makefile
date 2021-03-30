@@ -34,8 +34,3 @@ mocks: proto/links_grpc.pb.go pkg/services/algo/type.go pkg/repos/algo/type.go p
 # migrate create -ext sql -dir db/migrations -seq create_links_table
 # migrate -database "postgres://cifer@localhost:5432/url_shortener?sslmode=disable" -path db/migrations up 3
 
-
-
-# drop table algorithms;
-# drop table numbers;
-# drop table schema_migrations;
