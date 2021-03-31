@@ -5,6 +5,7 @@
 - Postgres
 
 ### Featres:
+- Clean architecture
 - Concurrency safe
 - Low latency
 - Default <code>BASE62</code> algorithm
