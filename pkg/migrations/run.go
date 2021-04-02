@@ -37,14 +37,14 @@ const (
 
 func ensureBase62Algorithm(m *migrations) error {
 	var count int
-	if err := m.db.QueryRow("select count(*) from algorithm where name = $1", base64AlgoName).Scan(&count); err != nil {
+	if err := m.db.QueryRow("select count(*) from algos where algo_strategy = $1", base64AlgoName).Scan(&count); err != nil {
 		return err
 	}
 	if count > 0 {
 		return nil
 	}
 	var numId int
-	if err := m.db.QueryRow("insert into number (number_value) values ($1) returning number_id", numberStartValue).Scan(&numId); err != nil {
+	if err := m.db.QueryRow("insert into numbers (number_value) values ($1) returning number_id", numberStartValue).Scan(&numId); err != nil {
 		return err
 	}
 	algo := &models.Algo{
@@ -53,7 +53,7 @@ func ensureBase62Algorithm(m *migrations) error {
 		Dict:           generateBase62Dict(),
 		NumberId:       numId,
 	}
-	if _, err := m.db.Exec("insert into algo (algo_strategy, number_id, increment_value) values ($1, $2, $3)", algo.Strategy, algo.NumberId, algo.IncrementValue); err != nil {
+	if _, err := m.db.Exec("insert into algos (algo_strategy, number_id, increment_value, dict) values ($1, $2, $3, $4)", algo.Strategy, algo.NumberId, algo.IncrementValue, algo.Dict); err != nil {
 		return err
 	}
 	return nil

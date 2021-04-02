@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"io/ioutil"
 	"net"
 	"os"
@@ -12,6 +11,7 @@ import (
 
 	"github.com/abdybaevae/url-shortener/gateway"
 	"github.com/abdybaevae/url-shortener/insecure"
+	"github.com/abdybaevae/url-shortener/pkg/conf"
 	"github.com/abdybaevae/url-shortener/pkg/database"
 	"github.com/abdybaevae/url-shortener/pkg/migrations"
 
@@ -32,12 +32,12 @@ import (
 )
 
 func main() {
-
-	algorithm := flag.String("algorithm", string(algo_service.BASE_62), "Default algorithm strategy that will be used to pre generate keys")
-	flag.Parse()
 	log := grpclog.NewLoggerV2(os.Stdout, ioutil.Discard, ioutil.Discard)
 	grpclog.SetLoggerV2(log)
-
+	config, err := conf.Load(".")
+	if err != nil {
+		log.Fatal(err)
+	}
 	db, err := database.Conn()
 	if err != nil {
 		log.Fatalln("cannot connect to database ", db)
@@ -54,7 +54,7 @@ func main() {
 
 	numSrv := num_srv.New(numRepo)
 	algoFactory := algo_service.NewFactory(algoRepo, numSrv)
-	algoSrv, err := algoFactory.Get(*algorithm)
+	algoSrv, err := algoFactory.Get(config.Algo)
 	keySrv := key_service.New(keyRepo, algoSrv)
 	linkSrv := link_service.New(linkRepo, keySrv)
 
@@ -63,8 +63,7 @@ func main() {
 
 	// Adds gRPC internal logs. This is quite verbose, so adjust as desired!
 
-	addr := "0.0.0.0:10000"
-	lis, err := net.Listen("tcp", addr)
+	lis, err := net.Listen("tcp", config.Addr)
 	if err != nil {
 		log.Fatalln("Failed to listen:", err)
 	}
@@ -76,11 +75,11 @@ func main() {
 	pbExample.RegisterLinkServiceServer(s, backend)
 
 	// Serve gRPC Server
-	log.Info("Serving gRPC on https://", addr)
+	log.Info("Serving gRPC on https://", config.Addr)
 	go func() {
 		log.Fatal(s.Serve(lis))
 	}()
 
-	err = gateway.Run("dns:///" + addr)
+	err = gateway.Run("dns:///" + config.Addr)
 	log.Fatalln(err)
 }

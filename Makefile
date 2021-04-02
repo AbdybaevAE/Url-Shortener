@@ -28,6 +28,10 @@ mocks: proto/links_grpc.pb.go pkg/services/algo/type.go pkg/repos/algo/type.go p
 	@rm -rf $(MOCKS_DESTINATION)
 	@for file in $^; do mockgen -source=$$file -destination=$(MOCKS_DESTINATION)/$$file; done
 
+DB_URL=postgres://cifer@localhost:5432/url_shortener?sslmode=disable
+.PHONY: run-migrations 
+run-migrations: 
+	 migrate -database ${DB_URL} -path db/migrations up
 # .PHONY: migrate 
 # migrate: 
 

@@ -1,1 +1,1 @@
-drop table if exists algorithms;
+drop table if exists algos;
