@@ -13,15 +13,19 @@
 - Multiple algorithms support
 
 ### Services:
-- Link service 
-- Key Generation service
+- Link Service
+- Key Generation Service
 - Algorithm Factory
-- Number service
+- Number Service
 
-### Link service allow you shorten links
-### Key generation service pre generate unique keys, depending on algorithm 
-### Algorithm factory register all algorithms 
-### Number service allow you concurently generate increment value in database
+
+Link service allow you shorten links
+
+Key generation service pre generate unique keys, depending on algorithm 
+
+Algorithm factory register all algorithms 
+
+Number service allow you concurently generate increment value in database
 
 
 
