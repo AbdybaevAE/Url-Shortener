@@ -2,6 +2,7 @@ package links
 
 import (
 	"net/url"
+	"time"
 
 	http_errors "github.com/abdybaevae/url-shortener/pkg/errors/http"
 	"github.com/abdybaevae/url-shortener/pkg/models"
@@ -18,7 +19,10 @@ func New(linkRepo link_repo.LinkRepo, keyService key_service.KeyService) LinkSer
 
 	return &LinkServiceImpl{linkRepo: linkRepo, keyService: keyService}
 }
-func (s *LinkServiceImpl) Shorten(longLink string) (string, error) {
+
+const DefaultExpireTime = time.Hour * 24 * 31 * 12 * 2
+
+func (s *LinkServiceImpl) ShortenLink(longLink string) (string, error) {
 	if longLink == "" {
 		return "", http_errors.InvalidLink
 	}
@@ -31,8 +35,9 @@ func (s *LinkServiceImpl) Shorten(longLink string) (string, error) {
 		return "", err
 	}
 	link := &models.Link{
-		Key:  key,
-		Link: longLink,
+		Key:       key,
+		Link:      longLink,
+		ExpiredAt: time.Now().Add(DefaultExpireTime),
 	}
 	if err := s.linkRepo.Save(link); err != nil {
 		return "", err
@@ -40,9 +45,19 @@ func (s *LinkServiceImpl) Shorten(longLink string) (string, error) {
 
 	return key, nil
 }
-func (s *LinkServiceImpl) GetOriginalFromShorten(shortLink string) (string, error) {
-	if shortLink == "" {
+func (s *LinkServiceImpl) GetLink(key string) (string, error) {
+	if key == "" {
 		return "", http_errors.InvalidLinkKey
 	}
-	return "", nil
+	linkEntity, err := s.linkRepo.GetByKey(key)
+	if err != nil {
+		return "", err
+	}
+	return linkEntity.Link, nil
+}
+func (s *LinkServiceImpl) VisitByKey(key string) error {
+	if key == "" {
+		return http_errors.InvalidLinkKey
+	}
+	return s.linkRepo.VisitByKey(key)
 }

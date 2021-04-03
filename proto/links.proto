@@ -22,7 +22,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service LinkService {
-  rpc Shorten(ShortenReq) returns (ShortenRes) {
+  rpc ShortenLink(ShortenLinkReq) returns (ShortenLinkRes) {
     option (google.api.http) = {
       // Route to this method from POST requests to /api/v1/users
       post: "/api/v1/links"
@@ -34,10 +34,10 @@ service LinkService {
       tags: "Links"
     };
   }
-  rpc GetOriginalFromShorten(GetOriginalFromShortenReq) returns (GetOriginalFromShortenRes) {
+  rpc GetLink(GetLinkReq) returns (GetLinkRes) {
     option (google.api.http) = {
       // Route to this method from GET requests to /api/v1/users
-      get: "/api/v1/links/{shortLink}"
+      get: "/api/v1/links/{key}"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Get original link"
@@ -45,19 +45,35 @@ service LinkService {
       tags: "Links"
     };
   }
+  rpc VisitByKey(VisitByKeyReq) returns (VisitByKeyRes) {
+    option (google.api.http) = {
+      get: "/api/v1/links/{key}/visit"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Visit link by key"
+      description: "Visit link update visited_at valud for link."
+      tags: "Links"
+    };
+  }
 }
 
-message ShortenReq {
+message ShortenLinkReq {
+  string link = 1;
+}
+message ShortenLinkRes {
+  string shortLink = 1;
+}
+
+message GetLinkReq {
+  string key = 1;
+}
+message GetLinkRes {
   string link = 1;
 }
 
-message ShortenRes {
-  string shortLink = 1;
+message VisitByKeyReq {
+  string key = 1;
 }
-message GetOriginalFromShortenReq {
-  string shortLink = 1;
-}
-
-message GetOriginalFromShortenRes {
-  string originalLink = 1;
+message VisitByKeyRes {
+  
 }

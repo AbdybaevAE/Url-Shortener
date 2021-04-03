@@ -1,6 +1,7 @@
 package links
 
 type LinkService interface {
-	Shorten(longLink string) (shortLink string, err error)
-	GetOriginalFromShorten(shortLink string) (longLink string, err error)
+	ShortenLink(link string) (linkKey string, err error)
+	GetLink(linkKey string) (link string, err error)
+	VisitByKey(key string) (err error)
 }

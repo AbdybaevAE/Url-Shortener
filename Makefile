@@ -19,7 +19,7 @@ install:
   	chmod +x "$(shell go env GOPATH)/bin/buf"
 
 tests:
-	reflex -r '(\.go$|go\.mod)' -s gotest ./...
+	reflex -c reflex-test.conf
 
 MOCKS_DESTINATION=mocks
 .PHONY: mocks
@@ -36,7 +36,7 @@ run-migrations:
 
 
 dev: run-migrations
-	reflex -r '(\.go$|go\.mod)' -s go run .
+	reflex -c reflex-dev.conf
 	
 # .PHONY: migrate 
 # migrate: 

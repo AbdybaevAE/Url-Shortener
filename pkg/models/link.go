@@ -8,5 +8,6 @@ type Link struct {
 	Key       string    `db:"key_value"`
 	CreatedAt time.Time `db:"created_at"`
 	VisitedAt time.Time `db:"visited_at"`
+	Visited   bool      `db:"visited"`
 	ExpiredAt time.Time `db:"expired_at"`
 }

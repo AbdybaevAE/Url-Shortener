@@ -17,17 +17,24 @@ func NewBackend(linkService link_service.LinkService) pbLink.LinkServiceServer {
 		linkService: linkService,
 	}
 }
-func (b *Backend) Shorten(ctx context.Context, in *pbLink.ShortenReq) (*pbLink.ShortenRes, error) {
-	shortLink, err := b.linkService.Shorten(in.Link)
+func (b *Backend) ShortenLink(ctx context.Context, in *pbLink.ShortenLinkReq) (*pbLink.ShortenLinkRes, error) {
+	shortLink, err := b.linkService.ShortenLink(in.Link)
 	if err != nil {
 		return nil, err
 	}
-	return &pbLink.ShortenRes{ShortLink: shortLink}, nil
+	return &pbLink.ShortenLinkRes{ShortLink: shortLink}, nil
 }
-func (b *Backend) GetOriginalFromShorten(ctx context.Context, in *pbLink.GetOriginalFromShortenReq) (*pbLink.GetOriginalFromShortenRes, error) {
-	originalLink, err := b.linkService.GetOriginalFromShorten(in.ShortLink)
+func (b *Backend) GetLink(ctx context.Context, in *pbLink.GetLinkReq) (*pbLink.GetLinkRes, error) {
+	link, err := b.linkService.GetLink(in.Key)
 	if err != nil {
 		return nil, err
 	}
-	return &pbLink.GetOriginalFromShortenRes{OriginalLink: originalLink}, nil
+	return &pbLink.GetLinkRes{Link: link}, nil
+}
+
+func (b *Backend) VisitByKey(ctx context.Context, in *pbLink.VisitByKeyReq) (*pbLink.VisitByKeyRes, error) {
+	if err := b.linkService.VisitByKey(in.Key); err != nil {
+		return nil, err
+	}
+	return &pbLink.VisitByKeyRes{}, nil
 }

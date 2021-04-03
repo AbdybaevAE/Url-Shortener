@@ -23,12 +23,12 @@
       "post": {
         "summary": "Shorten link",
         "description": "Shorten given link.",
-        "operationId": "LinkService_Shorten",
+        "operationId": "LinkService_ShortenLink",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/exampleShortenRes"
+              "$ref": "#/definitions/exampleShortenLinkRes"
             }
           },
           "default": {
@@ -44,7 +44,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/exampleShortenReq"
+              "$ref": "#/definitions/exampleShortenLinkReq"
             }
           }
         ],
@@ -53,16 +53,16 @@
         ]
       }
     },
-    "/api/v1/links/{shortLink}": {
+    "/api/v1/links/{key}": {
       "get": {
         "summary": "Get original link",
         "description": "Get original link by short link.",
-        "operationId": "LinkService_GetOriginalFromShorten",
+        "operationId": "LinkService_GetLink",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/exampleGetOriginalFromShortenRes"
+              "$ref": "#/definitions/exampleGetLinkRes"
             }
           },
           "default": {
@@ -74,7 +74,39 @@
         },
         "parameters": [
           {
-            "name": "shortLink",
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Links"
+        ]
+      }
+    },
+    "/api/v1/links/{key}/visit": {
+      "get": {
+        "summary": "Visit link by key",
+        "description": "Visit link update visited_at valud for link.",
+        "operationId": "LinkService_VisitByKey",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/exampleVisitByKeyRes"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "key",
             "in": "path",
             "required": true,
             "type": "string"
@@ -87,15 +119,7 @@
     }
   },
   "definitions": {
-    "exampleGetOriginalFromShortenRes": {
-      "type": "object",
-      "properties": {
-        "originalLink": {
-          "type": "string"
-        }
-      }
-    },
-    "exampleShortenReq": {
+    "exampleGetLinkRes": {
       "type": "object",
       "properties": {
         "link": {
@@ -103,13 +127,24 @@
         }
       }
     },
-    "exampleShortenRes": {
+    "exampleShortenLinkReq": {
+      "type": "object",
+      "properties": {
+        "link": {
+          "type": "string"
+        }
+      }
+    },
+    "exampleShortenLinkRes": {
       "type": "object",
       "properties": {
         "shortLink": {
           "type": "string"
         }
       }
+    },
+    "exampleVisitByKeyRes": {
+      "type": "object"
     },
     "protobufAny": {
       "type": "object",
