@@ -69,7 +69,7 @@ func isValidDictForBaseStrategy(dict string) bool {
 }
 func getKeysByBaseStrategy(from int, to int, dict string) []string {
 	ret := make([]string, 0)
-	if to < from || len(dict) < 0 || !isValidDictForBaseStrategy(dict) {
+	if to < from || len(dict) <= 0 || !isValidDictForBaseStrategy(dict) {
 		return ret
 	}
 	size := len(dict)

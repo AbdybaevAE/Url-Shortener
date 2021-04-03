@@ -62,7 +62,7 @@ func generateBase62Dict() string {
 	var sb strings.Builder
 	for i := 0; i < 26; i++ {
 		if i < 10 {
-			sb.WriteRune(rune(int('a') + i))
+			sb.WriteRune(rune(int('0') + i))
 		}
 		sb.WriteRune(rune(int('a') + i))
 		sb.WriteRune(rune(int('A') + i))

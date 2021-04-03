@@ -1,6 +1,7 @@
 package keys
 
 import (
+	"log"
 	"sync"
 
 	typ_err "github.com/abdybaevae/url-shortener/pkg/errors/typed"
@@ -17,6 +18,9 @@ type service struct {
 }
 
 func New(keyRepo key_repo.KeyRepo, algoSrv algo.AlgoService) KeyService {
+	if keyRepo == nil || algoSrv == nil {
+		log.Fatalln("Cannot init key service")
+	}
 	return &service{
 		keyRepo: keyRepo,
 		algoSrv: algoSrv,

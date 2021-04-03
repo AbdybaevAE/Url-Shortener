@@ -8,17 +8,18 @@ type Config struct {
 	Algo  string `mapstructure:"ALGORITHM"`
 }
 
-func Load(path string) (config Config, err error) {
+func Load(path string) (*Config, error) {
+	var config *Config
 	viper.AddConfigPath(path)
-	viper.SetConfigName("app")
+	viper.SetConfigName("app.env")
 	viper.SetConfigType("env")
 	viper.AutomaticEnv()
 
-	err = viper.ReadInConfig()
-	if err != nil {
-		return
+	if err := viper.ReadInConfig(); err != nil {
+		return nil, err
 	}
-
-	err = viper.Unmarshal(&config)
-	return
+	if err := viper.Unmarshal(&config); err != nil {
+		return nil, err
+	}
+	return config, nil
 }

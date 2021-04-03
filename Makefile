@@ -18,8 +18,8 @@ install:
     	-o "$(shell go env GOPATH)/bin/buf" && \
   	chmod +x "$(shell go env GOPATH)/bin/buf"
 
-hot-tests:
-	reflex -c reflex.conf
+tests:
+	reflex -r '(\.go$|go\.mod)' -s gotest ./...
 
 MOCKS_DESTINATION=mocks
 .PHONY: mocks
@@ -29,9 +29,15 @@ mocks: proto/links_grpc.pb.go pkg/services/algo/type.go pkg/repos/algo/type.go p
 	@for file in $^; do mockgen -source=$$file -destination=$(MOCKS_DESTINATION)/$$file; done
 
 DB_URL=postgres://cifer@localhost:5432/url_shortener?sslmode=disable
+
 .PHONY: run-migrations 
 run-migrations: 
 	 migrate -database ${DB_URL} -path db/migrations up
+
+
+dev: run-migrations
+	reflex -r '(\.go$|go\.mod)' -s go run .
+	
 # .PHONY: migrate 
 # migrate: 
 

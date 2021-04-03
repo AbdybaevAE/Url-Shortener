@@ -54,7 +54,7 @@ func Run(dialAddr string) error {
 	gwmux := runtime.NewServeMux()
 	err = pbLink.RegisterLinkServiceHandler(context.Background(), gwmux, conn)
 	if err != nil {
-		return fmt.Errorf("failed to register gateway: %w", err)
+		return fmt.Errorf("failed to reggister gateway: %w", err)
 	}
 
 	oa := getOpenAPIHandler()
@@ -75,7 +75,7 @@ func Run(dialAddr string) error {
 		}),
 	}
 	// Empty parameters mean use the TLS Config specified with the server.
-	if strings.ToLower(os.Getenv("SERVE_HTTP")) == "true" {
+	if true || strings.ToLower(os.Getenv("SERVE_HTTP")) == "true" {
 		log.Info("Serving gRPC-Gateway and OpenAPI Documentation on http://", gatewayAddr)
 		return fmt.Errorf("serving gRPC-Gateway server: %w", gwServer.ListenAndServe())
 	}

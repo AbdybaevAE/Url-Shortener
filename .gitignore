@@ -1,3 +1,4 @@
 .vscode
 .DS_Store
 .env
+__debug_bin

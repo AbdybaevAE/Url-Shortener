@@ -1,6 +1,7 @@
 package algo
 
 import (
+	"log"
 	"sync"
 
 	http_errors "github.com/abdybaevae/url-shortener/pkg/errors/http"
@@ -16,6 +17,9 @@ type factory struct {
 }
 
 func NewFactory(algoRepo repo.AlgoRepo, numService num_srv.NumberService) AlgoFactory {
+	if algoRepo == nil || numService == nil {
+		log.Fatalln("Cannot init algo factory")
+	}
 	return &factory{
 		repo:       algoRepo,
 		store:      make(map[string]AlgoService),

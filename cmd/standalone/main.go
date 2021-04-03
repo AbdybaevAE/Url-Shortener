@@ -17,9 +17,6 @@ var serverAddress = flag.String(
 )
 
 func main() {
-	flag.Parse()
-
-	// Adds gRPC internal logs. This is quite verbose, so adjust as desired!
 	log := grpclog.NewLoggerV2(os.Stdout, ioutil.Discard, ioutil.Discard)
 	grpclog.SetLoggerV2(log)
 

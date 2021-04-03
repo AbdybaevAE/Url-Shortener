@@ -38,7 +38,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	db, err := database.Conn()
+	db, err := database.Conn(config)
 	if err != nil {
 		log.Fatalln("cannot connect to database ", db)
 	}
@@ -55,6 +55,9 @@ func main() {
 	numSrv := num_srv.New(numRepo)
 	algoFactory := algo_service.NewFactory(algoRepo, numSrv)
 	algoSrv, err := algoFactory.Get(config.Algo)
+	if err != nil {
+		log.Fatalf("Cannot init config algo %s %v \n", config.Algo, err)
+	}
 	keySrv := key_service.New(keyRepo, algoSrv)
 	linkSrv := link_service.New(linkRepo, keySrv)
 
@@ -63,7 +66,8 @@ func main() {
 
 	// Adds gRPC internal logs. This is quite verbose, so adjust as desired!
 
-	lis, err := net.Listen("tcp", config.Addr)
+	addr := "0.0.0.0:10000"
+	lis, err := net.Listen("tcp", addr)
 	if err != nil {
 		log.Fatalln("Failed to listen:", err)
 	}
@@ -75,11 +79,11 @@ func main() {
 	pbExample.RegisterLinkServiceServer(s, backend)
 
 	// Serve gRPC Server
-	log.Info("Serving gRPC on https://", config.Addr)
+	log.Info("Serving gRPC on https://", addr)
 	go func() {
 		log.Fatal(s.Serve(lis))
 	}()
 
-	err = gateway.Run("dns:///" + config.Addr)
+	err = gateway.Run("dns:///" + addr)
 	log.Fatalln(err)
 }

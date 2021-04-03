@@ -28,7 +28,7 @@ func (s *LinkServiceImpl) Shorten(longLink string) (string, error) {
 	}
 	key, err := s.keyService.Get()
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 	link := &models.Link{
 		Key:  key,
@@ -40,7 +40,7 @@ func (s *LinkServiceImpl) Shorten(longLink string) (string, error) {
 
 	return key, nil
 }
-func (s *LinkServiceImpl) GetOriginalFromShorten(shortLink string) (longLink string, err error) {
+func (s *LinkServiceImpl) GetOriginalFromShorten(shortLink string) (string, error) {
 	if shortLink == "" {
 		return "", http_errors.InvalidLinkKey
 	}

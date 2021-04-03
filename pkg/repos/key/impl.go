@@ -20,8 +20,12 @@ func New(db *sqlx.DB) KeyRepo {
 
 const delete_one_by_algo_id = `
 	delete from keys
-	where algo_id = $1
-	limit 1
+	where key_id = (
+		select key_id 
+		from keys 
+		where algo_id = $1
+		limit 1
+	)
 	returning key_value`
 
 func (r *repo) DeleteOne(algoId int) (string, error) {
@@ -35,13 +39,21 @@ func (r *repo) DeleteOne(algoId int) (string, error) {
 	}
 	return value, nil
 }
+
+const bulkInsertNamedQuery = `
+	insert into keys 
+		(key_value, algo_id)
+	values 
+		(:key_value, :algo_id)
+`
+
 func (r *repo) InsertMany(keys []models.Key) error {
 	var sb strings.Builder
-	sb.WriteString("insert into keys (key_value, algo_id) values")
+	sb.WriteString("insert into keys (key_value, algo_id) values ")
 	args := make([]interface{}, 0)
 	for i := 0; i < len(keys); i++ {
 		args = append(args, keys[i].Value, keys[i].AlgoId)
-		sb.WriteString(fmt.Sprintf(" (?, ?)"))
+		sb.WriteString(fmt.Sprintf(" ($%v, $%v)", 2*i+1, 2*i+2))
 		if i != len(keys)-1 {
 			sb.WriteByte(',')
 		}
@@ -54,9 +66,8 @@ func (r *repo) InsertMany(keys []models.Key) error {
 	if err != nil {
 		return err
 	}
-	if count != int64(len(keys)) {
+	if count == 0 {
 		return typed_errors.KeyInsertError
-
 	}
 	return nil
 }
