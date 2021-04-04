@@ -8,13 +8,13 @@ lint:
     - DEFAULT
   ignore_only:
     PACKAGE_DIRECTORY_MATCH:
-      - example.proto
+      - links.proto
     PACKAGE_VERSION_SUFFIX:
-      - example.proto
+      - links.proto
     RPC_REQUEST_RESPONSE_UNIQUE:
-      - example.proto
+      - links.proto
     RPC_RESPONSE_STANDARD_NAME:
-      - example.proto
+      - links.proto
 deps:
   - buf.build/beta/googleapis
   - buf.build/grpc-ecosystem/grpc-gateway

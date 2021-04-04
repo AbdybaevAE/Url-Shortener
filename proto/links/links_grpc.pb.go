@@ -163,5 +163,5 @@ var _LinkService_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "links.proto",
+	Metadata: "links/links.proto",
 }

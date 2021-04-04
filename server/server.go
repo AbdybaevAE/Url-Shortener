@@ -4,7 +4,8 @@ import (
 	"context"
 
 	link_service "github.com/abdybaevae/url-shortener/pkg/services/link"
-	pbLink "github.com/abdybaevae/url-shortener/proto"
+	pbLink "github.com/abdybaevae/url-shortener/proto/links"
+	pbUsers "github.com/abdybaevae/url-shortener/proto/users"
 )
 
 // Backend implements the protobuf interface
@@ -12,7 +13,7 @@ type Backend struct {
 	linkService link_service.LinkService
 }
 
-func NewBackend(linkService link_service.LinkService) pbLink.LinkServiceServer {
+func NewBackend(linkService link_service.LinkService) *Backend {
 	return &Backend{
 		linkService: linkService,
 	}
@@ -37,4 +38,15 @@ func (b *Backend) VisitByKey(ctx context.Context, in *pbLink.VisitByKeyReq) (*pb
 		return nil, err
 	}
 	return &pbLink.VisitByKeyRes{}, nil
+}
+
+func (b *Backend) Register(ctx context.Context, in *pbUsers.RegisterReq) (*pbUsers.RegisterRes, error) {
+
+	return nil, nil
+}
+func (b *Backend) Login(ctx context.Context, in *pbUsers.LoginReq) (*pbUsers.LoginRes, error) {
+	return nil, nil
+}
+func (b *Backend) RefreshToken(ctx context.Context, in *pbUsers.RefreshTokenReq) (*pbUsers.RefreshTokenRes, error) {
+	return nil, nil
 }

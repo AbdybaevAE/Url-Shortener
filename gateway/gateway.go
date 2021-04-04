@@ -17,7 +17,8 @@ import (
 	"google.golang.org/grpc/grpclog"
 
 	"github.com/abdybaevae/url-shortener/insecure"
-	pbLink "github.com/abdybaevae/url-shortener/proto"
+	pbLink "github.com/abdybaevae/url-shortener/proto/links"
+	pbUsers "github.com/abdybaevae/url-shortener/proto/users"
 	"github.com/abdybaevae/url-shortener/third_party"
 )
 
@@ -52,9 +53,11 @@ func Run(dialAddr string) error {
 	}
 
 	gwmux := runtime.NewServeMux()
-	err = pbLink.RegisterLinkServiceHandler(context.Background(), gwmux, conn)
-	if err != nil {
-		return fmt.Errorf("failed to reggister gateway: %w", err)
+	if err := pbLink.RegisterLinkServiceHandler(context.Background(), gwmux, conn); err != nil {
+		return fmt.Errorf("failed to register gateway: %w", err)
+	}
+	if err := pbUsers.RegisterUsersServiceHandler(context.Background(), gwmux, conn); err != nil {
+		return fmt.Errorf("failed to register gateway: %w", err)
 	}
 
 	oa := getOpenAPIHandler()

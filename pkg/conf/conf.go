@@ -3,9 +3,10 @@ package conf
 import "github.com/spf13/viper"
 
 type Config struct {
-	DbUrl string `mapstructure:"DB_URL"`
-	Addr  string `mapstructure:"ADDRESS"`
-	Algo  string `mapstructure:"ALGORITHM"`
+	DbUrl     string `mapstructure:"DB_URL"`
+	Addr      string `mapstructure:"ADDRESS"`
+	Algo      string `mapstructure:"ALGORITHM"`
+	RedisAddr string `mapstructure:"REDIS_ADDRESS"`
 }
 
 func Load(path string) (*Config, error) {

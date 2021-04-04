@@ -66,3 +66,16 @@ func (r *repo) VisitByKey(key string) error {
 	}
 	return nil
 }
+
+const deleteLinkById = `
+	delete from links
+	where 
+		link_id = $1
+`
+
+func (r *repo) Remove(link *models.Link) error {
+	if _, err := r.db.Exec(deleteLinkById, link.Id); err != nil {
+		return err
+	}
+	return nil
+}

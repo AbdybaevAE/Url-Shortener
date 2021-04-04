@@ -1,0 +1,87 @@
+syntax="proto3";
+
+package users;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+// Defines the import path that should be used to import the generated package,
+// and the package name.
+option go_package = "github.com/abdybaevae/url-shortener/proto/links";
+
+// These annotations are used when generating the OpenAPI file.
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    version: "1.0";
+  };
+  external_docs: {
+    url: "https://github.com/abdybaevae/url-shortener";
+    description: "Users service";
+  }
+  schemes: HTTPS;
+};
+
+service UsersService {
+  rpc Register(RegisterReq) returns (RegisterRes) {
+    option (google.api.http) = {
+      // Route to this method from POST requests to /api/v1/users
+      post: "/api/v1/users/register"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Register endpoint"
+      description: "Register."
+      tags: "Users"
+    };
+  }
+  rpc Login(LoginReq) returns (LoginRes) {
+    option (google.api.http) = {
+      // Route to this method from GET requests to /api/v1/users
+      post: "/api/v1/users/login"
+      body : "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Login endpoint"
+      description: "Login endpoint."
+      tags: "Users"
+    };
+  }
+  rpc RefreshToken(RefreshTokenReq) returns (RefreshTokenRes) {
+    option (google.api.http) = {
+      get: "/api/v1/links/users/refresh"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Refresh token"
+      description: "Refresh token"
+      tags: "Users"
+    };
+  }
+}
+
+message RegisterReq {
+  string account = 1;
+  string password = 2;
+};
+message RegisterRes {
+  string status = 1;
+};
+message LoginReq {
+  string account = 1;
+  string password = 2;
+};
+message LoginRes {
+  string accessToken = 1;
+  string refreshToken = 2;
+}
+message RefreshTokenReq {
+  string resreshToken = 1;
+};
+message RefreshTokenRes {
+  string accessToken = 1;
+  string resreshToken = 2;
+};
+
+
+message Error {
+  string status = 1;
+};

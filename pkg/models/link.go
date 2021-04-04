@@ -11,3 +11,7 @@ type Link struct {
 	Visited   bool      `db:"visited"`
 	ExpiredAt time.Time `db:"expired_at"`
 }
+
+func (l *Link) IsExpired() bool {
+	return l.ExpiredAt.After(time.Now())
+}

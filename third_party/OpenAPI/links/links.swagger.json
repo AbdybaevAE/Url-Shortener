@@ -1,0 +1,184 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "links/links.proto",
+    "version": "1.0"
+  },
+  "tags": [
+    {
+      "name": "LinkService"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/links": {
+      "post": {
+        "summary": "Shorten link",
+        "description": "Shorten given link.",
+        "operationId": "LinkService_ShortenLink",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/exampleShortenLinkRes"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/exampleShortenLinkReq"
+            }
+          }
+        ],
+        "tags": [
+          "Links"
+        ]
+      }
+    },
+    "/api/v1/links/{key}": {
+      "get": {
+        "summary": "Get original link",
+        "description": "Get original link by short link.",
+        "operationId": "LinkService_GetLink",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/exampleGetLinkRes"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Links"
+        ]
+      }
+    },
+    "/api/v1/links/{key}/visit": {
+      "get": {
+        "summary": "Visit link by key",
+        "description": "Visit link update visited_at valud for link.",
+        "operationId": "LinkService_VisitByKey",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/exampleVisitByKeyRes"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Links"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "exampleGetLinkRes": {
+      "type": "object",
+      "properties": {
+        "link": {
+          "type": "string"
+        }
+      }
+    },
+    "exampleShortenLinkReq": {
+      "type": "object",
+      "properties": {
+        "link": {
+          "type": "string"
+        }
+      }
+    },
+    "exampleShortenLinkRes": {
+      "type": "object",
+      "properties": {
+        "shortLink": {
+          "type": "string"
+        }
+      }
+    },
+    "exampleVisitByKeyRes": {
+      "type": "object"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Url shorten service",
+    "url": "https://github.com/abdybaevae/url-shortener"
+  }
+}

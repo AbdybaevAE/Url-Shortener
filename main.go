@@ -14,6 +14,7 @@ import (
 	"github.com/abdybaevae/url-shortener/pkg/conf"
 	"github.com/abdybaevae/url-shortener/pkg/database"
 	"github.com/abdybaevae/url-shortener/pkg/migrations"
+	"github.com/go-redis/redis/v8"
 
 	algo_repo "github.com/abdybaevae/url-shortener/pkg/repos/algo"
 	algo_service "github.com/abdybaevae/url-shortener/pkg/services/algo"
@@ -27,7 +28,10 @@ import (
 	link_repo "github.com/abdybaevae/url-shortener/pkg/repos/link"
 	link_service "github.com/abdybaevae/url-shortener/pkg/services/link"
 
-	pbExample "github.com/abdybaevae/url-shortener/proto"
+	cache_srv "github.com/abdybaevae/url-shortener/pkg/services/cache"
+
+	pbLinks "github.com/abdybaevae/url-shortener/proto/links"
+	pbUsers "github.com/abdybaevae/url-shortener/proto/users"
 	"github.com/abdybaevae/url-shortener/server"
 )
 
@@ -59,7 +63,11 @@ func main() {
 		log.Fatalf("Cannot init config algo %s %v \n", config.Algo, err)
 	}
 	keySrv := key_service.New(keyRepo, algoSrv)
-	linkSrv := link_service.New(linkRepo, keySrv)
+	redisClient := redis.NewClient(&redis.Options{
+		Addr: config.RedisAddr,
+	})
+	cacheSrv := cache_srv.New(redisClient)
+	linkSrv := link_service.New(linkRepo, keySrv, cacheSrv)
 
 	//
 	backend := server.NewBackend(linkSrv)
@@ -76,7 +84,8 @@ func main() {
 		// TODO: Replace with your own certificate!
 		grpc.Creds(credentials.NewServerTLSFromCert(&insecure.Cert)),
 	)
-	pbExample.RegisterLinkServiceServer(s, backend)
+	pbLinks.RegisterLinkServiceServer(s, backend)
+	pbUsers.RegisterUsersServiceServer(s, backend)
 
 	// Serve gRPC Server
 	log.Info("Serving gRPC on https://", addr)
