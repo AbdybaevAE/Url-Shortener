@@ -81,8 +81,9 @@ func (s *LinkServiceImpl) GetLink(key string) (string, error) {
 }
 func (s *LinkServiceImpl) VisitByKey(key string) error {
 	if key == "" {
-		return http_errors.InvalidLinkKey
+		return http_errors.InvalidKey
 	}
+	go s.cacheSrv.VisitByKey(key)
 	return s.linkRepo.VisitByKey(key)
 }
 func (s *LinkServiceImpl) archiveLinkSilent(link *models.Link) {
