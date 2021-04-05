@@ -84,38 +84,6 @@
           "Links"
         ]
       }
-    },
-    "/api/v1/links/{key}/visit": {
-      "get": {
-        "summary": "Visit link by key",
-        "description": "Visit link update visited_at valud for link.",
-        "operationId": "LinkService_VisitByKey",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/exampleVisitByKeyRes"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "key",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Links"
-        ]
-      }
     }
   },
   "definitions": {
@@ -142,9 +110,6 @@
           "type": "string"
         }
       }
-    },
-    "exampleVisitByKeyRes": {
-      "type": "object"
     },
     "protobufAny": {
       "type": "object",

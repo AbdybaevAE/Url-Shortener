@@ -13,5 +13,5 @@ type Link struct {
 }
 
 func (l *Link) IsExpired() bool {
-	return l.ExpiredAt.After(time.Now())
+	return time.Now().After(l.ExpiredAt)
 }

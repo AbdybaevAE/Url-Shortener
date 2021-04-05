@@ -58,7 +58,7 @@ func (s *LinkServiceImpl) GetLink(key string) (string, error) {
 		return "", http_errors.InvalidLinkKey
 	}
 	linkEntity, err := s.cacheSrv.GetLinkByKey(key)
-	var syncCache bool
+	var notCached bool
 	if err != nil {
 		if err != typed.KeyNotFound {
 			return "", http_errors.KeyNotFound
@@ -67,24 +67,16 @@ func (s *LinkServiceImpl) GetLink(key string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		syncCache = true
+		notCached = true
 	}
-
 	if linkEntity.IsExpired() {
 		s.archiveLinkSilent(linkEntity)
 		return "", http_errors.KeyNotFound
 	}
-	if syncCache {
+	if notCached {
 		go s.cacheSrv.SetLink(linkEntity)
 	}
 	return linkEntity.Link, nil
-}
-func (s *LinkServiceImpl) VisitByKey(key string) error {
-	if key == "" {
-		return http_errors.InvalidKey
-	}
-	go s.cacheSrv.VisitByKey(key)
-	return s.linkRepo.VisitByKey(key)
 }
 func (s *LinkServiceImpl) archiveLinkSilent(link *models.Link) {
 	go s.archiveLink(link)

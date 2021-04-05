@@ -6,6 +6,7 @@ require (
 	github.com/cespare/reflex v0.3.0
 	github.com/go-redis/redis v6.15.9+incompatible // indirect
 	github.com/go-redis/redis/v8 v8.8.0 // indirect
+	github.com/go-redsync/redsync/v4 v4.1.0 // indirect
 	github.com/golang/mock v1.5.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.3.0
 	github.com/jmoiron/sqlx v1.3.1

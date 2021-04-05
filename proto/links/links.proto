@@ -45,16 +45,6 @@ service LinkService {
       tags: "Links"
     };
   }
-  rpc VisitByKey(VisitByKeyReq) returns (VisitByKeyRes) {
-    option (google.api.http) = {
-      get: "/api/v1/links/{key}/visit"
-    };
-    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "Visit link by key"
-      description: "Visit link update visited_at valud for link."
-      tags: "Links"
-    };
-  }
 }
 
 message ShortenLinkReq {

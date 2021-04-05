@@ -33,13 +33,6 @@ func (b *Backend) GetLink(ctx context.Context, in *pbLink.GetLinkReq) (*pbLink.G
 	return &pbLink.GetLinkRes{Link: link}, nil
 }
 
-func (b *Backend) VisitByKey(ctx context.Context, in *pbLink.VisitByKeyReq) (*pbLink.VisitByKeyRes, error) {
-	if err := b.linkService.VisitByKey(in.Key); err != nil {
-		return nil, err
-	}
-	return &pbLink.VisitByKeyRes{}, nil
-}
-
 func (b *Backend) Register(ctx context.Context, in *pbUsers.RegisterReq) (*pbUsers.RegisterRes, error) {
 
 	return nil, nil

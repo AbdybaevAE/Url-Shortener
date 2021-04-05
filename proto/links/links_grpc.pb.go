@@ -19,7 +19,6 @@ const _ = grpc.SupportPackageIsVersion7
 type LinkServiceClient interface {
 	ShortenLink(ctx context.Context, in *ShortenLinkReq, opts ...grpc.CallOption) (*ShortenLinkRes, error)
 	GetLink(ctx context.Context, in *GetLinkReq, opts ...grpc.CallOption) (*GetLinkRes, error)
-	VisitByKey(ctx context.Context, in *VisitByKeyReq, opts ...grpc.CallOption) (*VisitByKeyRes, error)
 }
 
 type linkServiceClient struct {
@@ -48,22 +47,12 @@ func (c *linkServiceClient) GetLink(ctx context.Context, in *GetLinkReq, opts ..
 	return out, nil
 }
 
-func (c *linkServiceClient) VisitByKey(ctx context.Context, in *VisitByKeyReq, opts ...grpc.CallOption) (*VisitByKeyRes, error) {
-	out := new(VisitByKeyRes)
-	err := c.cc.Invoke(ctx, "/example.LinkService/VisitByKey", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // LinkServiceServer is the server API for LinkService service.
 // All implementations should embed UnimplementedLinkServiceServer
 // for forward compatibility
 type LinkServiceServer interface {
 	ShortenLink(context.Context, *ShortenLinkReq) (*ShortenLinkRes, error)
 	GetLink(context.Context, *GetLinkReq) (*GetLinkRes, error)
-	VisitByKey(context.Context, *VisitByKeyReq) (*VisitByKeyRes, error)
 }
 
 // UnimplementedLinkServiceServer should be embedded to have forward compatible implementations.
@@ -75,9 +64,6 @@ func (UnimplementedLinkServiceServer) ShortenLink(context.Context, *ShortenLinkR
 }
 func (UnimplementedLinkServiceServer) GetLink(context.Context, *GetLinkReq) (*GetLinkRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLink not implemented")
-}
-func (UnimplementedLinkServiceServer) VisitByKey(context.Context, *VisitByKeyReq) (*VisitByKeyRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method VisitByKey not implemented")
 }
 
 // UnsafeLinkServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -127,24 +113,6 @@ func _LinkService_GetLink_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LinkService_VisitByKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(VisitByKeyReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(LinkServiceServer).VisitByKey(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/example.LinkService/VisitByKey",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LinkServiceServer).VisitByKey(ctx, req.(*VisitByKeyReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 var _LinkService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "example.LinkService",
 	HandlerType: (*LinkServiceServer)(nil),
@@ -156,10 +124,6 @@ var _LinkService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetLink",
 			Handler:    _LinkService_GetLink_Handler,
-		},
-		{
-			MethodName: "VisitByKey",
-			Handler:    _LinkService_VisitByKey_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
