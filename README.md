@@ -1,13 +1,15 @@
 # Url shortener service 
 ### Technologies:
-- Golang 
+- Go 
 - Grpc
 - Postgres
+- Redis
 
 ### Featres:
 - Clean architecture
 - Concurrency safe
 - Low latency
+- Cache
 - Default <code>BASE62</code> algorithm
 - Customizable algorithm
 - Multiple algorithms support
