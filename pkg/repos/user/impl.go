@@ -1,6 +1,7 @@
 package user
 
 import (
+	typederr "github.com/abdybaevae/url-shortener/pkg/errors/typed"
 	"github.com/abdybaevae/url-shortener/pkg/models"
 	"github.com/jmoiron/sqlx"
 )
@@ -25,4 +26,17 @@ func (r *repo) Create(user *models.User) error {
 		return err
 	}
 	return nil
+}
+
+const getUserByAccountQuery = `
+	select * from users 
+	where account = $1
+`
+
+func (r *repo) GetByAccount(account string) (*models.User, error) {
+	user := &models.User{}
+	if err := r.db.Get(user, getUserByAccountQuery, account); err != nil {
+		return nil, typederr.UserNotFound
+	}
+	return user, nil
 }

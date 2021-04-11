@@ -16,3 +16,7 @@ func (u *User) GenHash(password string) error {
 	u.Hash = string(hash)
 	return nil
 }
+func (u *User) IsValidPassword(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(u.Hash), []byte(password))
+	return err == nil
+}
