@@ -17,18 +17,22 @@ import (
 	"github.com/go-redis/redis/v8"
 
 	algo_repo "github.com/abdybaevae/url-shortener/pkg/repos/algo"
-	algo_service "github.com/abdybaevae/url-shortener/pkg/services/algo"
+	algo_srv "github.com/abdybaevae/url-shortener/pkg/services/algo"
 
 	key_repo "github.com/abdybaevae/url-shortener/pkg/repos/key"
-	key_service "github.com/abdybaevae/url-shortener/pkg/services/key"
+	key_srv "github.com/abdybaevae/url-shortener/pkg/services/key"
 
 	num_repo "github.com/abdybaevae/url-shortener/pkg/repos/number"
 	num_srv "github.com/abdybaevae/url-shortener/pkg/services/number"
 
 	link_repo "github.com/abdybaevae/url-shortener/pkg/repos/link"
-	link_service "github.com/abdybaevae/url-shortener/pkg/services/link"
+	link_srv "github.com/abdybaevae/url-shortener/pkg/services/link"
 
 	cache_srv "github.com/abdybaevae/url-shortener/pkg/services/cache"
+	token_srv "github.com/abdybaevae/url-shortener/pkg/services/token"
+
+	user_repo "github.com/abdybaevae/url-shortener/pkg/repos/user"
+	user_srv "github.com/abdybaevae/url-shortener/pkg/services/user"
 
 	pbLinks "github.com/abdybaevae/url-shortener/proto/links"
 	pbUsers "github.com/abdybaevae/url-shortener/proto/users"
@@ -55,22 +59,25 @@ func main() {
 	algoRepo := algo_repo.New(db)
 	keyRepo := key_repo.New(db)
 	linkRepo := link_repo.New(db)
+	userRepo := user_repo.New(db)
 
+	tokenSrv := token_srv.New()
+	userSrv := user_srv.New(userRepo, tokenSrv)
 	numSrv := num_srv.New(numRepo)
-	algoFactory := algo_service.NewFactory(algoRepo, numSrv)
+	algoFactory := algo_srv.NewFactory(algoRepo, numSrv)
 	algoSrv, err := algoFactory.Get(config.Algo)
 	if err != nil {
 		log.Fatalf("Cannot init config algo %s %v \n", config.Algo, err)
 	}
-	keySrv := key_service.New(keyRepo, algoSrv)
+	keySrv := key_srv.New(keyRepo, algoSrv)
 	redisClient := redis.NewClient(&redis.Options{
 		Addr: config.RedisAddr,
 	})
 	cacheSrv := cache_srv.New(redisClient)
-	linkSrv := link_service.New(linkRepo, keySrv, cacheSrv)
+	linkSrv := link_srv.New(linkRepo, keySrv, cacheSrv)
 
 	//
-	backend := server.NewBackend(linkSrv)
+	backend := server.NewBackend(linkSrv, userSrv)
 
 	// Adds gRPC internal logs. This is quite verbose, so adjust as desired!
 

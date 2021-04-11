@@ -3,30 +3,34 @@ package server
 import (
 	"context"
 
-	link_service "github.com/abdybaevae/url-shortener/pkg/services/link"
+	"github.com/abdybaevae/url-shortener/pkg/lib/resp"
+	link_srv "github.com/abdybaevae/url-shortener/pkg/services/link"
+	usr_srv "github.com/abdybaevae/url-shortener/pkg/services/user"
 	pbLink "github.com/abdybaevae/url-shortener/proto/links"
 	pbUsers "github.com/abdybaevae/url-shortener/proto/users"
 )
 
 // Backend implements the protobuf interface
 type Backend struct {
-	linkService link_service.LinkService
+	linkSrv link_srv.LinkService
+	userSrv usr_srv.UserService
 }
 
-func NewBackend(linkService link_service.LinkService) *Backend {
+func NewBackend(linkSrv link_srv.LinkService, userSrv usr_srv.UserService) *Backend {
 	return &Backend{
-		linkService: linkService,
+		linkSrv: linkSrv,
+		userSrv: userSrv,
 	}
 }
 func (b *Backend) ShortenLink(ctx context.Context, in *pbLink.ShortenLinkReq) (*pbLink.ShortenLinkRes, error) {
-	shortLink, err := b.linkService.ShortenLink(in.Link)
+	shortLink, err := b.linkSrv.ShortenLink(in.Link)
 	if err != nil {
 		return nil, err
 	}
 	return &pbLink.ShortenLinkRes{ShortLink: shortLink}, nil
 }
 func (b *Backend) GetLink(ctx context.Context, in *pbLink.GetLinkReq) (*pbLink.GetLinkRes, error) {
-	link, err := b.linkService.GetLink(in.Key)
+	link, err := b.linkSrv.GetLink(in.Key)
 	if err != nil {
 		return nil, err
 	}
@@ -34,12 +38,30 @@ func (b *Backend) GetLink(ctx context.Context, in *pbLink.GetLinkReq) (*pbLink.G
 }
 
 func (b *Backend) Register(ctx context.Context, in *pbUsers.RegisterReq) (*pbUsers.RegisterRes, error) {
-
-	return nil, nil
+	if err := b.userSrv.Register(in.Account, in.Password); err != nil {
+		return nil, err
+	}
+	return &pbUsers.RegisterRes{
+		Status: resp.Success.String(),
+	}, nil
 }
 func (b *Backend) Login(ctx context.Context, in *pbUsers.LoginReq) (*pbUsers.LoginRes, error) {
-	return nil, nil
+	pair, err := b.userSrv.Login(in.Account, in.Password)
+	if err != nil {
+		return nil, err
+	}
+	return &pbUsers.LoginRes{
+		AccessToken:  pair.Access,
+		RefreshToken: pair.Refresh,
+	}, nil
 }
 func (b *Backend) RefreshToken(ctx context.Context, in *pbUsers.RefreshTokenReq) (*pbUsers.RefreshTokenRes, error) {
-	return nil, nil
+	pair, err := b.userSrv.RefreshToken(in.ResreshToken)
+	if err != nil {
+		return nil, err
+	}
+	return &pbUsers.RefreshTokenRes{
+		AccessToken:  pair.Access,
+		RefreshToken: pair.Refresh,
+	}, nil
 }

@@ -78,7 +78,7 @@ message RefreshTokenReq {
 };
 message RefreshTokenRes {
   string accessToken = 1;
-  string resreshToken = 2;
+  string refreshToken = 2;
 };
 
 

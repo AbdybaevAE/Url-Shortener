@@ -179,7 +179,7 @@
         "accessToken": {
           "type": "string"
         },
-        "resreshToken": {
+        "refreshToken": {
           "type": "string"
         }
       }
