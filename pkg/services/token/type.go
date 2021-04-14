@@ -8,7 +8,6 @@ type TokenPair struct {
 }
 
 type TokenService interface {
-	GenerateToken(user *models.User) (pair *TokenPair, err error)
-	RefreshToken(refreshToken string) (pair *TokenPair, err error)
-	DeleteToken(accessToken string) (err error)
+	GenerateToken(user *models.User) (pair *TokenDetails, err error)
+	RefreshToken(refreshToken string) (pair *TokenDetails, err error)
 }

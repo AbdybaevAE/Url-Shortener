@@ -3,10 +3,14 @@ package conf
 import "github.com/spf13/viper"
 
 type Config struct {
-	DbUrl     string `mapstructure:"DB_URL"`
-	Addr      string `mapstructure:"ADDRESS"`
-	Algo      string `mapstructure:"ALGORITHM"`
-	RedisAddr string `mapstructure:"REDIS_ADDRESS"`
+	DbUrl                 string `mapstructure:"DB_URL"`
+	Addr                  string `mapstructure:"ADDRESS"`
+	Algo                  string `mapstructure:"ALGORITHM"`
+	RedisAddr             string `mapstructure:"REDIS_ADDRESS"`
+	AccessTokenSecret     string `mapstructure:"ACCESS_TOKEN_SECRET"`
+	RefreshTokenSecret    string `mapstructure:"REFRESH_TOKEN_SECRET"`
+	AccessTokenExpiredAt  string `mapstructure:"ACCESS_TOKEN_EXPIRED_AT"`
+	RefreshTokenExpiredAt string `mapstructure:"REFRESH_TOKEN_EXPIRED_AT"`
 }
 
 func Load(path string) (*Config, error) {

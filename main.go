@@ -61,7 +61,11 @@ func main() {
 	linkRepo := link_repo.New(db)
 	userRepo := user_repo.New(db)
 
-	tokenSrv := token_srv.New()
+	tokenSrv, err := token_srv.New(config)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	userSrv := user_srv.New(userRepo, tokenSrv)
 	numSrv := num_srv.New(numRepo)
 	algoFactory := algo_srv.NewFactory(algoRepo, numSrv)

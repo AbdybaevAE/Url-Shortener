@@ -11,4 +11,6 @@ var (
 	LinkNotFound                = errors.New("Link not found")
 	KeyNotFound                 = errors.New("Key not found")
 	UserNotFound                = errors.New("User not found")
+	TokenNotFound               = errors.New("Token not found")
+	InvalidToken                = errors.New("Invalid token")
 )
